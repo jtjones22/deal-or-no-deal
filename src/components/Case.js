@@ -1,10 +1,16 @@
 export default function Case(props) {
+    let caseStatus = ''
+    if (props.isPlayers) {
+        caseStatus = 'case players'
+    } else if (props.isOpen) {
+        caseStatus = 'case open'
+    }
     return(
-    <div onClick={props.onOpen} className={`case--${props.isOpen ? 'opened' : 'closed'}`}>
-        <h4>
-            {props.isOpen ? `$${props.caseValue}` : props.caseNumber}
+    <div onClick={props.isOpen || props.isPlayers ? null : props.onSelect}
+    className='case--container'>
+        <h4 className={caseStatus}>
+            {props.caseNumber}
         </h4>
-
     </div>
     )
 }
