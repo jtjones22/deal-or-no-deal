@@ -1,4 +1,4 @@
-h5, h4, h3{
+h1, h5, h4, h3{
     margin: 0;
 }
 
@@ -15,7 +15,7 @@ body, html {
 .game--container {
     display: grid;
     grid-template-columns: 1fr 2fr 1fr;
-    grid-template-rows: 1fr 1fr .5fr;
+    grid-template-rows: auto 1fr 1fr .5fr;
     /* width: 100vw; */
     height: 100vh;
 }
@@ -27,6 +27,7 @@ body, html {
     justify-content: center;
     align-items: center;
 }
+
 .left {
     grid-column: 1;
     grid-row: span 3;
@@ -43,16 +44,16 @@ body, html {
     margin: 1px 0px;
     flex-grow: 1;
     width: 100%;
-    background-color: gray;
-    /* border-radius: 10px; */
+    background-color: rgb(219, 186, 0);
+    border-radius: 10px;
     border: 2px solid black;
 }
 
 .value {
-    background-color: gray;
+    /* background-color: gray; */
     font-size: min(10px) max(50px);
     user-select: none; 
-    color: gold;
+    color: black;
 }
 .playercase--container {
     grid-column: 2;
@@ -61,6 +62,7 @@ body, html {
 
 .playercase {
     color: whitesmoke;
+    user-select: none;
 }
 
 .cases--container {
@@ -68,14 +70,19 @@ body, html {
     flex-wrap: wrap;
     justify-content: center;
     align-items: center;
-    grid-column: 2;
-    grid-row: 3;
+    grid-column: span 3;
+    grid-row: 4;
     user-select: none; 
+}
+
+.chosen {
+    background-color: rgb(78, 66, 0);
 }
 
 .open, .players{
     opacity: 50%;
 }
+
 .case--container {
     flex: 0 0 10%;
     border-radius: 10px;
@@ -85,3 +92,41 @@ body, html {
     background: black;
     color: goldenrod;
 }
+
+.display--container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    grid-column: 2;
+    grid-row: span 2;
+}
+
+.dealer--price {
+    color: white
+}
+
+.deal-button--container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 100px;
+}
+
+.deal-button--container > h3 {
+    margin: 10px;
+}
+
+.deal--button {
+    padding: 20px 30px;
+    border-radius: 10px;
+    border-color: none;
+}
+
+.deal {
+    background-color: green;
+}
+
+.nodeal {
+    background-color: red;
+}
+

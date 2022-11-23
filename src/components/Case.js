@@ -6,7 +6,7 @@ export default function Case(props) {
         caseStatus = 'case open'
     }
     return(
-    <div onClick={props.isOpen || props.isPlayers ? null : props.onSelect}
+    <div onClick={props.isOpen || props.isPlayers || props.isOnCall ? null : props.onSelect}
     className='case--container'>
         <h4 className={caseStatus}>
             {props.caseNumber}
