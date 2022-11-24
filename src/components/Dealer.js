@@ -1,29 +1,30 @@
 export default function Dealer(props) {
     let numberOfCases = 0
     let total = 0
-    let maxValue = 0
-    let RMS = props.cases.map(briefCase => {
+    props.cases.map(briefCase => {
         if(!briefCase.isOpen) {
-            maxValue = briefCase.value > maxValue ? briefCase.value : maxValue
-            // console.log(briefCase.caseNumber)
-            // console.log(briefCase.value)
             numberOfCases = numberOfCases + 1
             total = total + parseInt(briefCase.value)
         } 
     })
+    let caseMean = parseInt(total/numberOfCases / 3).toLocaleString()
+
     return (
-        <div>
+        <div className="dealer--container">
             <div>
-                <h1 className="dealer--price">
+                <h1 className="dealer price">
                     The Dealer offers you 
-                    ${parseInt((total/numberOfCases))}
+                    ${caseMean}
                     </h1>
             </div>
-            <div className="deal-button--container">
-                <button value={((total/numberOfCases)).toLocaleString()} 
-                className='deal--button deal' name='deal' onClick={props.onQuestion}>Deal</button> 
-                <h3>OR</h3> 
-                <button name='no deal' className="deal--button nodeal" onClick={props.onQuestion}>No Deal</button>
+            <div className="decision--container">
+                <h1 className="dealer button deal" onClick={()=>props.onQuestion(true, caseMean)}>
+                    Deal
+                </h1>
+                <h3>OR</h3>
+                <h1 className="deal button nodeal" onClick={()=>props.onQuestion(false)}>
+                    No Deal
+                </h1>
             </div>
         </div>
     )

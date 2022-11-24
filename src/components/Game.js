@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react"
 import Case from './Case'
 import Dealer from "./Dealer"
+import SwitchCase from "./SwitchCase"
 import prices from "../prices"
 import rounds_ from '../rounds'
 
@@ -10,26 +11,41 @@ export default function Game() {
     const [openedCases, setOpenedCases] = useState(0)
     const [playerCase, setPlayerCase] = useState()
     const [values, setValues] = useState([])
-    const [isOnCall, setIsOnCall] = useState(false)
+    const [lastSelectedCase, setLastSelectedCase] = useState()
     const [deal, setDeal] = useState(false)
     const [dealerPrice, setDealerPrice] = useState()
+    const [finalCase, setFinalCase] = useState()
 
     useEffect(() => {
-        let amount = [...prices]
-        for (let i = 1;i !== 27; i++) {
-            setCases(prevState => [...prevState, 
-                {
-                    caseNumber: i,
-                    value: amount.splice(Math.floor(Math.random() * 26 - i), 1)[0],
-                    isOpen: false,
+        if(cases.length === 0) {
+            let amount = [...prices]
+            for (let i = 1;i !== 27; i++) {
+                setCases(prevState => [...prevState, 
+                    {
+                        caseNumber: i,
+                        value: amount.splice(Math.floor(Math.random() * 26 - i), 1)[0],
+                        isOpen: false,
+                    }])
+                console.log('About to run values')
+                setValues(prevState=> [...prevState, {
+                    value: prices[i-1].toLocaleString(),
+                    isChosen: false
                 }])
-            setValues(prevState=> [...prevState, {
-                value: prices[i-1].toLocaleString(),
-                isChosen: false
-            }])
+            }
         }
-    }, [])
+    }, [reset])
 
+    function reset() {
+        setCases([])
+        setRounds(rounds_)
+        setOpenedCases(0)
+        setPlayerCase()
+        setValues([])
+        setLastSelectedCase()
+        setDeal(false)
+        setDealerPrice()
+        setFinalCase()
+    }
     function turnOffValue(briefCase) {
         setValues(prevState => {
             return prevState.map(price => {
@@ -41,9 +57,8 @@ export default function Game() {
             })
         })
     }
-
     function selectedCase(id) {
-        if(rounds[0] !== openedCases && !deal) {
+        if(rounds[0] !== openedCases && !deal && openedCases!==24) {
             setCases(prevState=> {
                 return prevState.map(briefCase => {
                     if (id === briefCase.caseNumber) {
@@ -53,6 +68,7 @@ export default function Game() {
                         }
                         turnOffValue(briefCase)
                         setOpenedCases(openedCases + 1)
+                        setLastSelectedCase({...briefCase, isOpen: true})
                         return {...briefCase, isOpen: true}
                     } else {
                         return briefCase
@@ -80,34 +96,86 @@ export default function Game() {
         )
     })
     
-    function dealOrNoDeal(event){
-        if (event.target.name === 'no deal') {
+    function dealOrNoDeal(decision, dealerPrice){
+        if (!decision) {
             setRounds(rounds.slice(1))
-        } else if (event.target.name === 'deal') {
-            setDealerPrice(event.target.value)
+        } else if (decision) {
+            setDealerPrice(dealerPrice.toLocaleString())
+            setDeal(true)
+        }
+    }
+
+    function handleCaseSwitch(decision, lastCase) {
+        if (decision) {
+            setFinalCase(playerCase)
+            setPlayerCase(lastCase)
+            setDeal(true)
+        } else {
             setDeal(true)
         }
     }
     
     function displayOutput() {
         let remainingCases = rounds[0] - openedCases
-        console.log(openedCases)
         if(deal) {
-            return (
-            <h1>
-                The Dealer offered you ${dealerPrice} and 
-                your brief case contained ${playerCase.value.toLocaleString()}
-            </h1>
-            )
+            if (dealerPrice) {
+                return (
+                    <div>
+                        <h1>
+                            The Dealer offered you ${dealerPrice} and 
+                            your brief case contained ${playerCase.value.toLocaleString()}
+                        </h1>
+                        <button onClick={reset}>Reset Game</button>
+                    </div>
+                )
+            } else {
+                return (
+                    <div>
+                        <h1>
+                            Your case #{playerCase.caseNumber} contained ${playerCase.value.toLocaleString()} and the final case 
+                            #{finalCase.caseNumber} contained ${finalCase.value.toLocaleString()}
+                        </h1>
+                        <button onClick={reset}>Reset Game</button>
+                    </div>
+                )
+            }
         } else {
             if (!playerCase){
                 return <h1>Please Select Your Case</h1>
             }
             if (rounds[0] !== openedCases){
                 if (openedCases === 24) {
-                    console('One case to open')
+                    if(!finalCase) {
+                        cases.map(briefCase=> {
+                            if(!briefCase.isOpen && !briefCase.isPlayers) {
+                                return setFinalCase(briefCase)
+                            }
+                        })
+                    }
+                    return (
+                        <div>
+                            <SwitchCase
+                            playerCase={playerCase}
+                            finalCase={finalCase}
+                            handleSwitch={handleCaseSwitch}
+                            />
+                        </div>
+                    )
                 }
-                return <h1>Select {remainingCases} more {remainingCases > 1 ? 'cases' : 'case'}</h1>
+                return (
+                <div className="display-info--container">
+                    <h1>Select</h1>
+                    <h1 className="remainingcases">{remainingCases}</h1>
+                    <h1>more {remainingCases > 1 ? 'cases' : 'case'}</h1>
+                    {lastSelectedCase && 
+                    <>
+                        <hr style={{borderColor:"gold"}}></hr>
+                        <h1 style={{marginTop:20 +'px'}}>
+                            Case {lastSelectedCase.caseNumber} contained ${lastSelectedCase.value.toLocaleString()}
+                        </h1>
+                    </>}
+                </div>
+                )
             }
             if (rounds[0] === openedCases){
                 return <Dealer
@@ -117,6 +185,16 @@ export default function Game() {
         }
     }
 
+    const caseElements = cases.map((briefCase, i) => {
+        return <Case
+        key={i}
+        caseNumber={briefCase.caseNumber}
+        caseValue={briefCase.value}
+        isOpen={briefCase.isOpen}
+        isPlayers={briefCase.isPlayers}
+        onSelect={() => selectedCase(briefCase.caseNumber)}
+        />
+    })
     
     return (
         <div className="game--container">
@@ -135,17 +213,7 @@ export default function Game() {
                 {displayOutput()}       
             </div>
             <div className="cases--container">
-                {cases.map((briefCase, i) => {
-                    return <Case
-                    key={i}
-                    caseNumber={briefCase.caseNumber}
-                    caseValue={briefCase.value}
-                    isOpen={briefCase.isOpen}
-                    isPlayers={briefCase.isPlayers}
-                    onSelect={() => selectedCase(briefCase.caseNumber)}
-                    isOnCall = {isOnCall}
-                    />
-                })}
+                {caseElements}
             </div>
         </div>
     )

@@ -7,6 +7,14 @@ body, html {
     background-color: rgb(48, 48, 48);
 }
 
+input,
+textarea,
+button,
+select,
+a {
+  -webkit-tap-highlight-color: rgba(0,0,0,0);
+}
+
 #root {
     margin: 0;
     text-align: center;
@@ -23,7 +31,7 @@ body, html {
 .values--container {
     display: flex;
     flex-direction: column;
-    margin: 10px;
+    margin: 7px;
     justify-content: center;
     align-items: center;
 }
@@ -50,11 +58,36 @@ body, html {
 }
 
 .value {
-    /* background-color: gray; */
-    font-size: min(10px) max(50px);
+    font-size: 20px;
     user-select: none; 
     color: black;
 }
+
+@media screen and (max-width: 649px){
+    .value {
+        font-size: 15px;
+    }
+}
+@media screen and (max-width: 516px){
+    .value {
+        font-size: 13px;
+    }
+}
+
+@media screen and (max-width: 320px){
+    .value {
+        font-size: 10px;
+    }
+    .case {
+        font-size: 10px;
+    }
+}
+@media screen and (max-width: 268px) {
+    .value {
+        font-size: 10px;
+    }
+}
+
 .playercase--container {
     grid-column: 2;
     grid-row: 1;
@@ -63,6 +96,11 @@ body, html {
 .playercase {
     color: whitesmoke;
     user-select: none;
+    font-size: 35px;
+}
+
+.remainingcases {
+    color: white;
 }
 
 .cases--container {
@@ -99,27 +137,25 @@ body, html {
     align-items: center;
     grid-column: 2;
     grid-row: span 2;
+    user-select: none; 
+    font-size: 20px;
 }
 
 .dealer--price {
     color: white
 }
 
-.deal-button--container {
+.decision--container {
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
-    margin-top: 100px;
+    margin-top: 20px;
 }
 
-.deal-button--container > h3 {
-    margin: 10px;
-}
-
-.deal--button {
-    padding: 20px 30px;
+.button {
+    padding: 10px 20px;
     border-radius: 10px;
-    border-color: none;
 }
 
 .deal {
@@ -130,3 +166,19 @@ body, html {
     background-color: red;
 }
 
+@media screen and (max-width: 425px) {
+    .display--container{
+        font-size: 12px;
+    }
+    .playercase {
+        font-size: 20px;
+    }
+}
+@media screen and (max-width: 320px) {
+    .display--container{
+        font-size: 10px;
+    }
+    .playercase {
+        font-size: 15px;
+    }
+}
