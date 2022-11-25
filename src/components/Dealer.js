@@ -7,7 +7,7 @@ export default function Dealer(props) {
             total = total + parseInt(briefCase.value)
         } 
     })
-    let caseMean = parseInt(total/numberOfCases / 3).toLocaleString()
+    let caseMean = parseInt(total/numberOfCases / 2).toLocaleString()
 
     return (
         <div className="dealer--container">
@@ -18,7 +18,7 @@ export default function Dealer(props) {
                     </h1>
             </div>
             <div className="decision--container">
-                <h1 className="dealer button deal" onClick={()=>props.onQuestion(true, caseMean)}>
+                <h1 className="deal button deal" onClick={()=>props.onQuestion(true, caseMean)}>
                     Deal
                 </h1>
                 <h3>OR</h3>

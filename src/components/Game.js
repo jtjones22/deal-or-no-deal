@@ -58,7 +58,7 @@ export default function Game() {
         })
     }
     function selectedCase(id) {
-        if(rounds[0] !== openedCases && !deal && openedCases!==24) {
+        if(rounds[0] !== openedCases && !deal && openedCases !== 24) {
             setCases(prevState=> {
                 return prevState.map(briefCase => {
                     if (id === briefCase.caseNumber) {
@@ -141,7 +141,7 @@ export default function Game() {
             }
         } else {
             if (!playerCase){
-                return <h1>Please Select Your Case</h1>
+                return <h1 style={{color:'white'}}>Please Select Your Case</h1>
             }
             if (rounds[0] !== openedCases){
                 if (openedCases === 24) {
@@ -170,9 +170,8 @@ export default function Game() {
                     {lastSelectedCase && 
                     <>
                         <hr style={{borderColor:"gold"}}></hr>
-                        <h1 style={{marginTop:20 +'px'}}>
-                            Case {lastSelectedCase.caseNumber} contained ${lastSelectedCase.value.toLocaleString()}
-                        </h1>
+                        <h1 style={{marginTop:20 +'px'}}>Case <span style={{color: 'orange'}}>{lastSelectedCase.caseNumber}</span> contained </h1>
+                        <h1 style={{color: 'white'}}>${lastSelectedCase.value.toLocaleString()}</h1>
                     </>}
                 </div>
                 )
@@ -195,12 +194,12 @@ export default function Game() {
         onSelect={() => selectedCase(briefCase.caseNumber)}
         />
     })
-    
+
     return (
         <div className="game--container">
             <div className="playercase--container">
                 <h3 className="playercase">
-                    {playerCase ? `Your Case is ${playerCase.caseNumber}` : `Your Case is ....`}
+                    Your case is <span style={{color: `${playerCase ? 'gold' : 'white'}`}}>{playerCase ? playerCase.caseNumber : '....'}</span>
                 </h3>
             </div>
             <div className="values--container left">
@@ -212,7 +211,7 @@ export default function Game() {
             <div className="display--container">
                 {displayOutput()}       
             </div>
-            <div className="cases--container">
+            <div className="cases--container" style={{opacity: `${openedCases === rounds[0] || finalCase ? 30 + '%' : 100 + '%'}`}}>
                 {caseElements}
             </div>
         </div>
